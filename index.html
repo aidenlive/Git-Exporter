@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="GitHub Static Exporter - Export GitHub repos as ZIP archives client-side">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="light dark">
+
+  <title>GitHub Static Exporter - Demo & Documentation</title>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <!-- GitHub Exporter Styles -->
+  <link rel="stylesheet" href="styles/github-exporter.css">
+
+  <style>
+    /* Demo Page Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --demo-bg: oklch(98% 0 0);
+      --demo-surface: oklch(100% 0 0);
+      --demo-border: oklch(92% 0 0);
+      --demo-text: oklch(10% 0 0);
+      --demo-text-secondary: oklch(45% 0 0);
+      --demo-text-tertiary: oklch(60% 0 0);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --demo-bg: oklch(15% 0 0);
+        --demo-surface: oklch(20% 0 0);
+        --demo-border: oklch(28% 0 0);
+        --demo-text: oklch(96% 0 0);
+        --demo-text-secondary: oklch(70% 0 0);
+        --demo-text-tertiary: oklch(55% 0 0);
+      }
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--demo-bg);
+      color: var(--demo-text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .demo-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 64px 16px 96px;
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .demo-title {
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .demo-subtitle {
+      font-size: 17px;
+      color: var(--demo-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .demo-section {
+      margin-bottom: 64px;
+    }
+
+    .demo-section-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .demo-section-desc {
+      font-size: 15px;
+      color: var(--demo-text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .demo-card {
+      background: var(--demo-surface);
+      border: 1px solid var(--demo-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .demo-card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .demo-card-desc {
+      font-size: 14px;
+      color: var(--demo-text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .demo-form-group {
+      margin-bottom: 20px;
+    }
+
+    .demo-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--demo-text);
+      background: var(--demo-bg);
+      border: 1px solid var(--demo-border);
+      border-radius: 12px;
+      transition: all 200ms;
+    }
+
+    .demo-input:focus {
+      outline: none;
+      border-color: var(--demo-text);
+      box-shadow: 0 0 0 3px oklch(0% 0 0 / 0.08);
+    }
+
+    .demo-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--demo-surface);
+      background: var(--demo-text);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 200ms;
+      width: 100%;
+    }
+
+    .demo-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px oklch(0% 0 0 / 0.15);
+    }
+
+    .demo-code {
+      background: var(--demo-bg);
+      border: 1px solid var(--demo-border);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .demo-code pre {
+      font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--demo-text);
+      margin: 0;
+    }
+
+    .demo-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--demo-surface);
+      border: 1px solid var(--demo-border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .demo-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--demo-bg);
+      border-bottom: 1px solid var(--demo-border);
+    }
+
+    .demo-table td {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--demo-border);
+    }
+
+    .demo-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .demo-table code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: var(--demo-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .demo-note {
+      padding: 16px 20px;
+      background: oklch(from var(--demo-text) l c h / 0.05);
+      border-left: 3px solid var(--demo-text);
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .demo-note-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-note-text {
+      font-size: 14px;
+      color: var(--demo-text-secondary);
+      line-height: 1.5;
+    }
+
+    .demo-footer {
+      text-align: center;
+      padding: 48px 16px;
+      border-top: 1px solid var(--demo-border);
+      margin-top: 64px;
+    }
+
+    .demo-footer-text {
+      font-size: 13px;
+      color: var(--demo-text-tertiary);
+    }
+
+    @media (max-width: 640px) {
+      .demo-container {
+        padding: 48px 16px 120px;
+      }
+
+      .demo-section {
+        margin-bottom: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <!-- Header -->
+    <header class="demo-header">
+      <h1 class="demo-title">GitHub Static Exporter</h1>
+      <p class="demo-subtitle">
+        Export GitHub repositories as ZIP archives entirely client-side.
+        Perfect for static site deployments.
+      </p>
+    </header>
+
+    <!-- Quick Start -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">Quick Start</h2>
+      <p class="demo-section-desc">
+        Add the exporter to any file input in three simple steps.
+      </p>
+
+      <div class="demo-code">
+        <pre><code>&lt;!-- 1. Include JSZip (Required Dependency) --&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 2. Include GitHub Exporter --&gt;
+&lt;link rel="stylesheet" href="styles/github-exporter.css"&gt;
+&lt;script src="scripts/github-static-exporter.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3. Add data attribute to file input --&gt;
+&lt;input type="file" accept=".zip" data-gh-export&gt;</code></pre>
+      </div>
+
+      <div class="demo-note">
+        <div class="demo-note-title">Note</div>
+        <p class="demo-note-text">
+          The exporter automatically attaches to any file input with the
+          <code>data-gh-export</code> or <code>data-gh-export-fab</code> attribute.
+        </p>
+      </div>
+    </section>
+
+    <!-- Pattern Comparison -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">UI Patterns</h2>
+      <p class="demo-section-desc">
+        Choose between inline buttons or floating action buttons.
+      </p>
+
+      <table class="demo-table">
+        <thead>
+          <tr>
+            <th>Pattern</th>
+            <th>Attribute</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inline Button</td>
+            <td><code>data-gh-export</code></td>
+            <td>Forms with multiple inputs</td>
+          </tr>
+          <tr>
+            <td>Floating Button</td>
+            <td><code>data-gh-export-fab</code></td>
+            <td>Single-page apps</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Live Examples -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">Live Examples</h2>
+      <p class="demo-section-desc">
+        Try both UI patterns with these interactive demos.
+      </p>
+
+      <!-- Example 1: Inline -->
+      <div class="demo-card">
+        <h3 class="demo-card-title">Example 1: Inline Button</h3>
+        <p class="demo-card-desc">
+          Default pattern with button next to the file input.
+        </p>
+        <div class="demo-form-group">
+          <label class="demo-label" for="demo-inline">Select File</label>
+          <input
+            type="file"
+            id="demo-inline"
+            accept=".zip"
+            data-gh-export
+            class="demo-input"
+          >
+        </div>
+      </div>
+
+      <!-- Example 2: FAB -->
+      <div class="demo-card">
+        <h3 class="demo-card-title">Example 2: Floating Action Button</h3>
+        <p class="demo-card-desc">
+          Mobile-first pattern with fixed floating button.
+        </p>
+        <div class="demo-form-group">
+          <label class="demo-label" for="demo-fab">Select File</label>
+          <input
+            type="file"
+            id="demo-fab"
+            accept=".zip"
+            data-gh-export-fab
+            class="demo-input"
+          >
+        </div>
+      </div>
+
+      <!-- Example 3: Form Integration -->
+      <div class="demo-card">
+        <h3 class="demo-card-title">Example 3: Form Integration</h3>
+        <p class="demo-card-desc">
+          The exported ZIP automatically attaches to the file input.
+        </p>
+        <form id="demo-form" onsubmit="event.preventDefault(); handleSubmit(event);">
+          <div class="demo-form-group">
+            <label class="demo-label" for="project-name">Project Name</label>
+            <input
+              type="text"
+              id="project-name"
+              name="project-name"
+              class="demo-input"
+              placeholder="my-static-site"
+              required
+            >
+          </div>
+
+          <div class="demo-form-group">
+            <label class="demo-label" for="demo-form-file">Project Files</label>
+            <input
+              type="file"
+              id="demo-form-file"
+              name="project-files"
+              accept=".zip"
+              data-gh-export
+              class="demo-input"
+              required
+            >
+          </div>
+
+          <button type="submit" class="demo-button">
+            <i class="ph ph-upload-simple"></i>
+            Deploy Project
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Authentication -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">Authentication</h2>
+      <p class="demo-section-desc">
+        Access private repositories with a Personal Access Token.
+      </p>
+
+      <div class="demo-note">
+        <div class="demo-note-title">Security</div>
+        <p class="demo-note-text">
+          Tokens are stored in localStorage and only sent to GitHub's API.
+          Never shared with third parties.
+          <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" rel="noopener">
+            Create token here
+          </a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- File Filtering -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">File Filtering</h2>
+      <p class="demo-section-desc">
+        The exporter automatically excludes non-static files.
+      </p>
+
+      <div class="demo-code">
+        <pre><code>// Excluded directories
+/src, /node_modules, /tests, /.github, /dist,
+/build, /.git, /coverage, /.vscode
+
+// Excluded files
+package.json, tsconfig.json, webpack.config.js,
+.gitignore, Dockerfile, etc.
+
+// Allowed extensions
+html, css, js, json, jpg, png, svg, woff, woff2,
+mp4, pdf, md</code></pre>
+      </div>
+    </section>
+
+    <!-- Browser Support -->
+    <section class="demo-section">
+      <h2 class="demo-section-title">Browser Support</h2>
+      <p class="demo-section-desc">
+        Modern browsers with native web standards.
+      </p>
+
+      <table class="demo-table">
+        <thead>
+          <tr>
+            <th>Browser</th>
+            <th>Version</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chrome</td>
+            <td>90+</td>
+            <td>✓ Supported</td>
+          </tr>
+          <tr>
+            <td>Safari</td>
+            <td>14+</td>
+            <td>✓ Supported</td>
+          </tr>
+          <tr>
+            <td>Firefox</td>
+            <td>88+</td>
+            <td>✓ Supported</td>
+          </tr>
+          <tr>
+            <td>Edge</td>
+            <td>90+</td>
+            <td>✓ Supported</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Footer -->
+    <footer class="demo-footer">
+      <p class="demo-footer-text">
+        GitHub Static Exporter v3.0.0 · MIT License ·
+        <a href="https://github.com" target="_blank" rel="noopener">View Source</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Required Dependency -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- GitHub Static Exporter -->
+  <script src="scripts/github-static-exporter.js"></script>
+
+  <!-- Demo Handlers -->
+  <script>
+    // Log file changes
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          console.log('✓ File attached:', {
+            name: file.name,
+            size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+            type: file.type,
+            modified: new Date(file.lastModified).toLocaleDateString()
+          });
+        }
+      });
+    });
+
+    // Form submission handler
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const projectName = formData.get('project-name');
+      const zipFile = document.getElementById('demo-form-file').files[0];
+
+      console.log('Form submitted:', {
+        projectName,
+        zipFile: zipFile ? {
+          name: zipFile.name,
+          size: `${(zipFile.size / 1024 / 1024).toFixed(2)} MB`
+        } : 'No file'
+      });
+
+      alert(
+        `✓ Deployment Initiated\n\n` +
+        `Project: ${projectName}\n` +
+        `File: ${zipFile ? zipFile.name : 'None'}\n\n` +
+        `Check console for details.`
+      );
+    }
+
+    // Log initialization
+    console.log('%c✓ GitHub Static Exporter v3.0.0', 'font-size: 14px; font-weight: bold;');
+  </script>
+</body>
+</html>
