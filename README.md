@@ -85,7 +85,29 @@ Replace the following files with the enhanced versions:
 
 ## ✨ Features
 
-### 1. Enhanced File Upload Section
+### 1. Branch Search & Sorting (v3.1.0)
+- **Search branches** by name with real-time filtering
+- **Smart sorting**: `main` and `master` always appear first, then alphabetically
+- **Default badge** shown on main/master branches
+- **Full pagination**: Fetches ALL branches (not just first 30)
+
+### 2. File Browser & Preview (v3.1.0)
+- **Tree view** of all exportable files with folder hierarchy
+- **Expandable folders** with visual indicators
+- **File type icons** for HTML, CSS, JS, images, fonts, etc.
+- **Select All** checkbox for bulk selection
+- **Folder checkboxes** to select/deselect entire directories
+- **Individual file selection** with checkboxes
+- **Real-time filter** to search files by name or path
+- **Selection counter** showing "X of Y files" selected
+
+### 3. Custom Entry Point (v3.1.0)
+- **Dropdown selector** for any HTML file as entry point
+- **Auto-detection** of common entry points: `index.html`, `home.html`, `default.html`, `main.html`
+- **Visual indicator** highlighting the entry point file
+- **Flexible naming** - no longer limited to `index.html`
+
+### 4. Enhanced File Upload Section
 
 ```php
 <div class="static-file-upload-section">
@@ -100,7 +122,7 @@ Replace the following files with the enhanced versions:
 - Loading state during upload
 - Success state when file attached
 
-### 2. GitHub Integration Badge
+### 5. GitHub Integration Badge
 
 ```php
 <div class="static-github-icon">
@@ -115,7 +137,7 @@ Replace the following files with the enhanced versions:
 - Informative text
 - Changes color when file attached
 
-### 3. Visual States
+### 6. Visual States
 
 **Default State:**
 - Dashed border
@@ -146,9 +168,14 @@ Replace the following files with the enhanced versions:
 3. Choose export method:
    - **Public Repo**: Enter GitHub URL
    - **Private Repo**: Authenticate with PAT
-4. Select repository and branch
-5. Files automatically export and attach
-6. Submit form to deploy
+4. Select repository from list (with search)
+5. Select branch (sorted with main/master first, searchable)
+6. **NEW: Browse & preview files** in the file browser
+   - Check/uncheck individual files or entire folders
+   - Filter files by name
+   - Select custom entry point (not just index.html)
+7. Click "Export X Files" to create ZIP
+8. Submit form to deploy
 
 ### For Developers
 
@@ -289,6 +316,23 @@ For issues or questions:
 
 ---
 
-**Version:** 3.0.0  
-**Last Updated:** 2025  
+**Version:** 3.1.0
+**Last Updated:** January 2025
 **Compatibility:** Bootstrap 4+, jQuery 3+
+
+## 📋 Changelog
+
+### v3.1.0 (January 2025)
+- **Branch search/filter** - Search branches by name
+- **Smart branch sorting** - main/master always first, then alphabetical
+- **Full branch pagination** - Fetches all branches (not limited to 30)
+- **File browser UI** - Preview and browse files before export
+- **Checkbox selection** - Select/deselect individual files or folders
+- **Custom entry point** - Choose any HTML file as entry point
+- **File filtering** - Search files by name or path
+
+### v3.0.0
+- Initial production release
+- Monochrome OKLCH design system
+- Public and private repo support
+- Auto-filtering of non-static files
